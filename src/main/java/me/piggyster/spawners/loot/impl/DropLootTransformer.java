@@ -1,4 +1,4 @@
-package me.piggyster.spawners.loot.imp;
+package me.piggyster.spawners.loot.impl;
 
 import me.piggyster.spawners.SpawnerPlugin;
 import me.piggyster.spawners.loot.LootTransformer;
