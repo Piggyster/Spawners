@@ -52,7 +52,7 @@ public class StackedSpawner {
     }
 
     public String getUpgradeName() {
-        return upgrade == null ? "None" : upgrade;
+        return upgrade;
     }
 
     public SpawnerUpgrade getUpgrade() {
