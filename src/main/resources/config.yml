@@ -1,0 +1,58 @@
+database:
+  type: H2 #H2 or MySQL
+  host: localhost
+  port: 8080
+  database: spawner_storage
+  username: username
+  password: ''
+
+settings:
+  max-spawner-stack-size: 500
+  max-mob-stack-size: 1000
+  kill-entire-mob-stack: false
+  limit-spawners-per-chunk: false
+  entity-name: "&6&l%amount%x &e&l%mob%"
+  entity-name-upgraded: "&6&l%amount%x &e&l%mob% &7(%upgrade%)"
+
+  item-name: "&6%amount%x &e%item%"
+
+  hit-cooldown: 100 #in ms, -1 to disable
+
+
+spawner-item:
+  name: "&e&l%name% &6&lSpawner"
+  lore:
+    - "&8Mob Spawner"
+    - " "
+    - " &6&l⋆ &eType: &f%name%"
+    - " &6&l⋆ &eUpgrade: &f%upgrade%"
+    - " "
+    - "<#cfd8dc>&o(( &f&oPlace <#cfd8dc>&oto spawn mobs! ))"
+
+
+messages:
+  SPAWNER-PLACED: "&a&l(!) &aYou have placed &2%amount%x %type% &aspawner."
+  SPAWNER-BROKEN: "&a&l(!) &aYou have broken &2%amount%x %type% &aspawner."
+  SPAWNER-INFO:
+    - "&e&l(!) &eSpawner Information:"
+    - " &6&l⋆ &eType: &f%type%"
+    - " &6&l⋆ &eUpgrade: &f%upgrade%"
+    - " &6&l⋆ &eAmount: &f%amount%"
+    - "&f"
+
+  ISLAND-TOP-UPDATING:
+    - " "
+    - " &3&m--&r &b&lISLAND TOP RECALCULATING &3&m--&r"
+    - " &7&o(( Please wait while it is being updated! ))"
+    - " "
+  ISLAND-TOP-UPDATED:
+    - " "
+    - " &3&m--&r &b&lISLAND TOP UPDATED &3&m--&r"
+    - " &7&o(( View results with &f&o/is top&7&o, next update in 10m! ))"
+    - " "
+
+
+  INVALID-PLAYER: "&c&l(!) &cInvalid player &4%found%&c."
+  INVALID-NUMBER: "&c&l(!) &cInvalid number &4%found%&c."
+  INVALID-UPGRADE: "&c&l(!) &cInvalid upgrade &4%found%&c."
+  INVALID-ENTITY-TYPE: "&c&l(!) &cInvalid entity type &4%found%&c."

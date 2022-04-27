@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+}
+
+group 'me.piggyster'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        content {
+            includeGroup 'org.bukkit'
+            includeGroup 'org.spigotmc'
+        }
+    }
+    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/central' }
+    maven { url = 'https://repo.codemc.io/repository/maven-public/' }
+    maven { url = 'https://repo.bg-software.com/repository/api/' }
+    maven { url = 'https://jitpack.io' }
+    mavenLocal()
+
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+
+    compileOnly 'org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT'
+    compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.9'
+    compileOnly 'com.bgsoftware:SuperiorSkyblockAPI:1.9.0'
+    compileOnly "com.github.MilkBowl:VaultAPI:1.7"
+    implementation files('libs/PiggyAPI-1.0.0-SNAPSHOT.jar')
+}
+
+
+test {
+    useJUnitPlatform()
+}

@@ -1,0 +1,19 @@
+upgrade-drop:
+  name: "&p&l%upgrade% %item%"
+  lore:
+    - "&8Upgraded Spawner Drop"
+    - " "
+    - "<#cfd8dc>Sell this item in /shop"
+    - "<#cfd8dc>for a high sell value!"
+
+
+
+mobs:
+  ZOMBIE:
+    drop: ROTTEN_FLESH
+    price: 10000
+    upgrades:
+      'Common':
+        color: "&f"
+        price: 50000
+        drop: ROTTEN_FLESH

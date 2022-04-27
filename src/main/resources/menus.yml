@@ -1,0 +1,146 @@
+spawner-menu:
+  title: "&n%type% Spawner&r"
+  size: 27
+  items:
+    spacer:
+      material: BLACK_STAINED_GLASS_PANE
+    add:
+      material: LIME_STAINED_GLASS_PANE
+      name: "&2&lDEPOSIT: &a&l%amount%"
+      lore:
+        - "<#cfd8dc>Click here to &fDeposit"
+      slots:
+        15: 1
+        16: 64
+        17: -1
+    take:
+      material: RED_STAINED_GLASS_PANE
+      name: "&4&lWITHDRAW: &c&l%amount%"
+      lore:
+        - "<#cfd8dc>Click here to &fWithdraw"
+      slots:
+        11: 1
+        10: 64
+        9: -1
+    spawner:
+      slot: 13
+      material: SPAWNER
+      name: "&e&l%type% &6&lSpawner"
+      lore:
+        - " &6&l⋆ &eUpgrade: &f%upgrade%"
+        - " &6&l⋆ &eSize: &f%size%x"
+        - " "
+        - "<#cfd8dc>&o(( Click to view &f&oupgrades<#cfd8dc>&o! ))"
+  temp-items:
+    no-spawners-found:
+      time: 40
+      material: BARRIER
+      name: "&c&lNo Spawners Found"
+      lore:
+        - "&4No spawners of matching type found in your inventory!"
+    stack-full:
+      time: 40
+      material: BARRIER
+      name: "&c&lStack Full"
+      lore:
+        - "&4There is no more room for any spawners!"
+
+upgrade-menu:
+  title: "&n%type% Upgrades&r"
+  size: 27
+  items:
+    spacer:
+      material: BLACK_STAINED_GLASS_PANE
+    upgrade:
+      name: "&3&l%name% Upgrade"
+      lore:
+        - " &3&l⋆ &bPrice: &f$%cost% &7(x%size% Spawners)"
+        - " &3&l⋆ &bDrop type: &f%drop%"
+        - " "
+        - "&c&lWarning <#cfd8dc>Buying this upgrade will remove"
+        - "<#cfd8dc>any other upgrade better or not and you"
+        - "<#cfd8dc>will have to repurchase &c&l&nAny Upgrade&r&7!"
+      slots: [12, 13, 14, 15, 16]
+    reset:
+      material: BARRIER
+      slot: 10
+      name: "&c&lReset Upgrades"
+      lore:
+        - "<#cfd8dc>Buying this upgrade will remove any other"
+        - "<#cfd8dc>upgrade better or not and you will have to"
+        - "<#cfd8dc>repurchase &c&l&nAny Upgrade&r<#cfd8dc>!"
+  temp-items:
+    not-enough-money:
+      time: 40
+      material: BARRIER
+      name: "&c&lInsufficient Balance"
+      lore:
+        - "&4You do not have enough money!"
+    upgrade-purchased:
+      time: 40
+      material: CLOCK
+      name: "&a&lUpgrade Purchased"
+      lore:
+        - "&2You have upgraded every spawner in the stack!"
+    already-upgraded:
+      time: 40
+      material: BARRIER
+      name: "&c&lAlready Upgraded"
+      lore:
+        - "&4You already have this upgrade on this stack!"
+    upgrade-reset:
+      time: 40
+      material: CLOCK
+      name: "&a&lUpgrade Reset"
+      lore:
+        - "&2All upgrades have been made default on this stack!"
+
+island-top-menu:
+  title: "&nTop Islands&r"
+  size: 27
+  items:
+    spacer:
+      material: BLACK_STAINED_GLASS_PANE
+    island:
+      name: "&b&lIsland &3&n%leader%&r &8(&7#%rank%&8)"
+      lore:
+        - " "
+        - "&b&lInformation"
+        - "&3│ &7Place &f#%rank%"
+        - "&3│ &7Worth &f$%worth%"
+        - " "
+        - "&b&lMembers"
+        - "&3│ &f%member%"
+        - " "
+        - "&bClick to view spawners!"
+      slots: [3, 4, 5, 10, 11, 12, 13, 14, 15, 16]
+    no-island:
+      material: PLAYER_HEAD
+      texture: 'http://textures.minecraft.net/texture/badc048a7ce78f7dad72a07da27d85c0916881e5522eeed1e3daf217a38c1a'
+      name: "&c&lNo Island Here"
+      lore:
+        - "&7No island is in this space."
+        - "&7Build up worth by placing spawners"
+        - "&7and take its place here!"
+
+island-top-preview-menu:
+  title: "&nTop Islands&r"
+  items:
+    spacer:
+      material: BLACK_STAINED_GLASS_PANE
+    spawner:
+      name: "&b&l%type% &3&lSpawner"
+      lore:
+        - "&3│ &bAmount &f%amount%x &7($%price% ea)"
+        - "&3│ &bUpgrade &f%upgrade%"
+        - " "
+        - "&a&lWORTH: $%worth%"
+      slots: [ 3, 4, 5, 10, 11, 12, 13, 14, 15, 16 ]
+    no-island:
+      material: PLAYER_HEAD
+      texture: 'http://textures.minecraft.net/texture/badc048a7ce78f7dad72a07da27d85c0916881e5522eeed1e3daf217a38c1a'
+      name: "&c&lNo Island Here"
+      lore:
+        - "&7No island is in this space."
+        - "&7Build up worth by placing spawners"
+        - "&7and take its place here!"

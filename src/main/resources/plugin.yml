@@ -1,0 +1,9 @@
+name: Spawners
+author: Piggyster
+version: 1.0
+api-version: 1.17
+main: me.piggyster.spawners.SpawnerPlugin
+depend: [PiggyAPI]
+commands:
+  spawner:
+    aliases: [spawners, ss]
