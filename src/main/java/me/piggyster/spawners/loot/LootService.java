@@ -1,10 +1,9 @@
 package me.piggyster.spawners.loot;
 
-import com.google.common.collect.Maps;
 import me.piggyster.api.service.PluginService;
 import me.piggyster.spawners.SpawnerPlugin;
-import me.piggyster.spawners.loot.imp.DropLootTransformer;
-import me.piggyster.spawners.loot.imp.InventoryLootTransformer;
+import me.piggyster.spawners.loot.impl.DropLootTransformer;
+import me.piggyster.spawners.loot.impl.InventoryLootTransformer;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
