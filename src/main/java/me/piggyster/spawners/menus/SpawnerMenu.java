@@ -110,7 +110,7 @@ public class SpawnerMenu extends ConsumerMenu {
         }
         setItem(spawnerItem.clone()
                         .setPlaceholder("%type%", StringUtils.entityToString(stackedSpawner.getEntityType()))
-                        .setPlaceholder("%upgrade%", stackedSpawner.getUpgradeName())
+                        .setPlaceholder("%upgrade%", stackedSpawner.getUpgradeName() == null ? "None" : stackedSpawner.getUpgradeName())
                         .setPlaceholder("%size%", stackedSpawner.getStackAmount()).setAmount(stackedSpawner.getStackAmount()),
                 spawnerItemSlot, (event) -> {
             UpgradeMenu upgradeMenu = new UpgradeMenu(player, stackedSpawner);

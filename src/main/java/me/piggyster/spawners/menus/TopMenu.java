@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class TopMenu extends ConsumerMenu {
 
@@ -80,7 +81,12 @@ public class TopMenu extends ConsumerMenu {
             List<String> lore = new ArrayList<>();
             meta.getLore().forEach(line -> {
                 if(line.contains("%member%")) {
-                    entry.getValue().getIslandMembers(true).stream().map(SuperiorPlayer::getName).forEach(s -> lore.add(line.replace("%member%", s)));
+                    Stream<String> stream = entry.getValue().getIslandMembers(false).stream().map(SuperiorPlayer::getName);
+                    if(stream.findAny().isEmpty()) {
+                        lore.add(line.replace("%member%", "No Team Members"));
+                    } else {
+                        stream.forEach(s -> lore.add(line.replace("%member%", s)));
+                    }
                 } else {
                     lore.add(line);
                 }
