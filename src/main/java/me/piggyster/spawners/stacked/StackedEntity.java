@@ -55,19 +55,17 @@ public class StackedEntity {
 
     public int decreaseStackAmount(int stackAmount) {
         int newAmount = increaseStackAmount(-stackAmount);
-        updateName();
         return newAmount;
     }
 
     public int increaseStackAmount(int stackAmount) {
         int newAmount = this.stackAmount += stackAmount;
-        updateName();
+        if(newAmount > 0) updateName();
         return newAmount;
     }
 
     public void updateName() {
         entity.setCustomNameVisible(true);
-        Bukkit.getLogger().warning(upgrade);
         String newName = upgrade == null ? plugin.getSettingsService().getEntityName() : plugin.getSettingsService().getEntityNameUpgraded();
         newName = newName.replace("%amount%", stackAmount + "").replace("%mob%", WordUtils.capitalizeFully(entity.getType().toString().replace("_", " ")));
         if(upgrade != null) {

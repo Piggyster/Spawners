@@ -5,19 +5,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.entity.EntityDeathEvent;
 
-public class AsyncEntityDeathEvent extends Event implements Cancellable {
+public class AsyncEntityDeathEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
 
     private StackedEntity stackedEntity;
     private int lootBonus;
     private Player player;
-    private boolean cancel;
 
     public AsyncEntityDeathEvent(StackedEntity stackedEntity, Player player) {
         super(true);
-        this.cancel = false;
         this.stackedEntity = stackedEntity;
         this.player = player;
         this.lootBonus = 0;
@@ -47,11 +46,8 @@ public class AsyncEntityDeathEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public boolean isCancelled() {
-        return cancel;
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
-    public void setCancelled(boolean cancel) {
-        this.cancel = cancel;
-    }
 }

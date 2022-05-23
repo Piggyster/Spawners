@@ -21,7 +21,7 @@ public class ItemHandler {
     private final double searchRange;
 
     public ItemHandler() {
-        searchRange = Math.pow(3, 2);
+        searchRange = Math.pow(3, 3);
     }
 
     public int computeSpace(Inventory inv, ItemStack stack) {

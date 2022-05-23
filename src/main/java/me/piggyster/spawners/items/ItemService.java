@@ -7,6 +7,7 @@ import me.piggyster.spawners.SpawnerPlugin;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Item;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 import java.util.UUID;
@@ -18,11 +19,10 @@ public class ItemService implements PluginService<SpawnerPlugin> {
     private ItemHandler itemHandler;
     private String display;
 
-    @Override
     public void initialize() {
         itemHandler = new ItemHandler();
         itemStacks = new ConcurrentHashMap<>();
-        display = ColorAPI.process("&3%size%x &b%item%");
+        display = getPlugin().getSettingsService().getItemName();
     }
 
     public ItemHandler getItemHandler() {
@@ -43,9 +43,9 @@ public class ItemService implements PluginService<SpawnerPlugin> {
             itemName = ChatColor.stripColor(item.getItemStack().getItemMeta().getDisplayName());
         }
         String display = this.display
-                .replaceAll("%size%", NumberUtil.format(amount))
+                .replaceAll("%amount%", NumberUtil.format(amount))
                 .replaceAll("%item%", itemName);
-        item.setCustomName(display);
+        item.setCustomName(ColorAPI.process(display));
         item.setCustomNameVisible(true);
     }
 
@@ -60,7 +60,6 @@ public class ItemService implements PluginService<SpawnerPlugin> {
     public void clear() {
         itemStacks.clear();
     }
-
 
     public SpawnerPlugin getPlugin() {
         return SpawnerPlugin.getInstance();

@@ -7,6 +7,7 @@ import me.piggyster.spawners.stacked.StackedEntity;
 import me.piggyster.spawners.stacked.StackedSpawner;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -88,12 +89,7 @@ public class SpawnerListener implements Listener {
             StackedSpawner stackedSpawner = new StackedSpawner(event.getBlockPlaced().getLocation(), entityType, amountToPlace, upgrade);
             plugin.getConfigManager().getMessage("SPAWNER-PLACED").setPlaceholder("%type%", stackedSpawner.getEntityType()).setPlaceholder("%amount%", amountToPlace).send(event.getPlayer());
             List<StackedSpawner> spawnersInChunk = plugin.getDataService().getSpawnersInChunk(stackedSpawner.getLocation().getChunk());
-            if(spawnersInChunk == null || spawnersInChunk.isEmpty()) {
-                Bukkit.getLogger().warning("starting new stack, none found in chunk");
-                plugin.getDataService().addStackedSpawner(stackedSpawner);
-                return;
-            }
-            List<StackedSpawner> spawners = spawnersInChunk.stream().filter(s -> s.getStackAmount() < s.getStackLimit() && s.getEntityType() == entityType && s.getUpgradeName().equals(stackedSpawner.getUpgradeName())).toList();
+            List<StackedSpawner> spawners = spawnersInChunk.stream().filter(s -> s.getStackAmount() < s.getStackLimit() && s.getEntityType() == entityType && Objects.equals(s.getUpgradeName(), stackedSpawner.getUpgradeName())).toList();
             for(StackedSpawner streamSpawner : spawners) {
                 int fit = stackedSpawner.getStackLimit() - streamSpawner.getStackAmount();
                 if(fit >= stackedSpawner.getStackAmount()) {
@@ -128,7 +124,7 @@ public class SpawnerListener implements Listener {
         try {
             StackedSpawner stackedSpawner = plugin.getDataService().getStackedSpawner(event.getBlock().getLocation());
             stackedSpawner.remove();
-            ItemStack spawnerItem = plugin.getSettingsService().getSpawner(stackedSpawner.getEntityType(), stackedSpawner.getUpgrade());
+            ItemStack spawnerItem = plugin.getSettingsService().getSpawner(stackedSpawner.getEntityType(), stackedSpawner.getUpgradeName());
             spawnerItem.setAmount(stackedSpawner.getStackAmount());
             Map<Integer, ItemStack> map = event.getPlayer().getInventory().addItem(spawnerItem);
             map.forEach((i, item) -> {
@@ -157,7 +153,9 @@ public class SpawnerListener implements Listener {
         try {
             BlockStateMeta blockStateMeta = (BlockStateMeta) meta;
             spawnType = ((CreatureSpawner) blockStateMeta.getBlockState()).getSpawnedType();
-        } catch(Throwable ignore) {}
+        } catch(Throwable ex) {
+            ex.printStackTrace();
+        }
 
         return spawnType;
     }

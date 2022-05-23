@@ -169,7 +169,10 @@ public class SpawnerMenu extends ConsumerMenu {
                 }
                 if(target == 0) return;
                 spawner.setAmount(target);
-                player.getInventory().addItem(spawner);
+                ItemStack leftover = player.getInventory().addItem(spawner).get(0);
+                if(leftover != null) {
+                    stackedSpawner.getLocation().getWorld().dropItemNaturally(stackedSpawner.getLocation(), leftover);
+                }
                 stackedSpawner.setStackAmount(stackedSpawner.getStackAmount() - target);
                 if(stackedSpawner.getStackAmount() < 1) {
                     plugin.getDataService().removeStackedSpawner(stackedSpawner);

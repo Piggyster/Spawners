@@ -44,7 +44,7 @@ public class GiveupgradeSubcommand extends SubCommand {
             configManager.getMessage("INVALID-NUMBER").setPlaceholder("%found%", args[3]).send(sender);
             return;
         }
-        ItemStack spawner = plugin.getSettingsService().getSpawner(type, upgrade);
+        ItemStack spawner = plugin.getSettingsService().getSpawner(type, upgrade.getName());
         spawner.setAmount(amount);
         target.getInventory().addItem(spawner);
     }

@@ -1,14 +1,12 @@
 package me.piggyster.spawners.data;
 
 import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.RemovalListener;
-import com.google.common.cache.RemovalNotification;
+import com.google.common.cache.*;
 import me.piggyster.api.service.PluginService;
 import me.piggyster.spawners.SpawnerPlugin;
 import me.piggyster.spawners.stacked.StackedEntity;
 import me.piggyster.spawners.stacked.StackedSpawner;
+import me.piggyster.spawners.top.SpawnerIsland;
 import me.piggyster.spawners.upgrades.SpawnerUpgrade;
 import me.piggyster.spawners.utils.ChunkPosition;
 import me.piggyster.spawners.utils.LocationUtils;
@@ -31,7 +29,7 @@ public class DataService implements PluginService<SpawnerPlugin> {
     private SpawnerPlugin plugin;
 
     private Map<ChunkPosition, Map<Location, StackedSpawner>> spawners;
-    private Cache<UUID, StackedEntity> entities;
+    private Map<UUID, StackedEntity> entities;
 
     public DataService(SpawnerPlugin plugin) {
         this.plugin = plugin;
@@ -41,7 +39,7 @@ public class DataService implements PluginService<SpawnerPlugin> {
     public void initialize() {
         database = new SpawnerDatabase(plugin);
         spawners = new HashMap<>();
-        entities = CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).removalListener((RemovalListener<UUID, StackedEntity>) notification -> notification.getValue().remove()).build();
+        entities = new HashMap<>();
     }
 
     public StackedSpawner getStackedSpawner(CreatureSpawner creatureSpawner) {
@@ -65,7 +63,6 @@ public class DataService implements PluginService<SpawnerPlugin> {
         Map<Location, StackedSpawner> map = spawners.getOrDefault(chunkPos, new HashMap<>());
         map.put(stackedSpawner.getLocation(), stackedSpawner);
         spawners.put(chunkPos, map);
-        Bukkit.getLogger().warning("");
         database.insertSpawner(stackedSpawner);
     }
 
@@ -82,12 +79,11 @@ public class DataService implements PluginService<SpawnerPlugin> {
     }
 
     public boolean isStackedEntity(LivingEntity livingEntity) {
-        if(livingEntity.isDead()) return false;
-        return entities.asMap().containsKey(livingEntity.getUniqueId());
+        return entities.containsKey(livingEntity.getUniqueId());
     }
 
     public StackedEntity getStackedEntity(LivingEntity livingEntity) {
-        return entities.asMap().get(livingEntity.getUniqueId());
+        return entities.get(livingEntity.getUniqueId());
     }
 
     public void addStackedEntity(StackedEntity stackedEntity) {
@@ -95,7 +91,7 @@ public class DataService implements PluginService<SpawnerPlugin> {
     }
 
     public void removeStackedEntity(StackedEntity stackedEntity) {
-        entities.asMap().remove(stackedEntity.getLivingEntity().getUniqueId());
+        entities.remove(stackedEntity.getLivingEntity().getUniqueId());
     }
 
     public List<StackedSpawner> getSpawnersInChunk(Chunk chunk) {
@@ -125,13 +121,13 @@ public class DataService implements PluginService<SpawnerPlugin> {
                 .filter(e -> e.getLivingEntity().getLocation().distanceSquared(baseLoc) < searchRange);
     }
 
-    public CompletableFuture<Map<EntityType, Map<SpawnerUpgrade, Integer>>> loadSpawnersInIsland(Island island) {
-        return database.loadSpawnersInIsland(island);
+    public CompletableFuture<Map<UUID, SpawnerIsland>> loadIslandTop() {
+        return database.loadIslandTop();
     }
 
 
     public List<StackedEntity> getStackedEntities() {
-        return new ArrayList<>(entities.asMap().values());
+        return new ArrayList<>(entities.values());
     }
 
     public void handleChunkUnload(Chunk chunk) {

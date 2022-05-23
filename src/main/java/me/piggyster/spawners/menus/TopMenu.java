@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class TopMenu extends ConsumerMenu {
@@ -69,19 +70,20 @@ public class TopMenu extends ConsumerMenu {
         }
         islandSlots.forEach(slot -> setItem(noIslandItem.clone(), slot));
 
-        int i = 0;
-        for(Map.Entry<SpawnerIsland, Island> entry : plugin.getIslandTopService().getTopIslands().entrySet()) {
-            if(islandSlots.size() < i + 1) break;
+        final AtomicInteger i = new AtomicInteger(0);
+
+        plugin.getIslandTopService().getTopIslands().forEach(spawnerIsland -> {
+            if(islandSlots.size() < i.get() + 1) return;
             SimpleItem item = islandFormatItem.clone();
-            item.setPlaceholder("%rank%", i + 1)
-                    .setPlaceholder("%leader%", entry.getValue().getOwner().getName())
-                    .setPlaceholder("%worth%", NumberUtil.withSuffix(entry.getKey().getTotalValue()));
+            item.setPlaceholder("%rank%", i.get() + 1)
+                    .setPlaceholder("%leader%", spawnerIsland.getIsland().getOwner().getName())
+                    .setPlaceholder("%worth%", NumberUtil.withSuffix(spawnerIsland.getTotalValue()));
             ItemStack itemStack = item.build();
             ItemMeta meta = itemStack.getItemMeta();
             List<String> lore = new ArrayList<>();
             meta.getLore().forEach(line -> {
                 if(line.contains("%member%")) {
-                    Stream<String> stream = entry.getValue().getIslandMembers(false).stream().map(SuperiorPlayer::getName);
+                    Stream<String> stream = spawnerIsland.getIsland().getIslandMembers(false).stream().map(SuperiorPlayer::getName);
                     if(stream.findAny().isEmpty()) {
                         lore.add(line.replace("%member%", "No Team Members"));
                     } else {
@@ -93,13 +95,13 @@ public class TopMenu extends ConsumerMenu {
             });
             meta.setLore(lore);
             itemStack.setItemMeta(meta);
-            SkullCreator.itemWithUuid(itemStack, entry.getValue().getOwner().getUniqueId());
-            setItem(itemStack, islandSlots.get(i), event -> {
-                TopPreviewMenu topPreviewMenu = new TopPreviewMenu(player, entry.getKey());
+            SkullCreator.itemWithUuid(itemStack, spawnerIsland.getIsland().getOwner().getUniqueId());
+            setItem(itemStack, islandSlots.get(i.get()), event -> {
+                TopPreviewMenu topPreviewMenu = new TopPreviewMenu(player, spawnerIsland);
                 topPreviewMenu.open();
             });
-            i++;
-        }
+            i.incrementAndGet();
+        });
     }
 
     public int getSize() {

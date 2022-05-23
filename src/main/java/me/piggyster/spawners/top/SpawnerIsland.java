@@ -6,8 +6,7 @@ import me.piggyster.spawners.upgrades.SpawnerUpgrade;
 import org.bukkit.entity.EntityType;
 
 import java.math.BigDecimal;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class SpawnerIsland implements Comparable<SpawnerIsland> {
 
@@ -17,8 +16,20 @@ public class SpawnerIsland implements Comparable<SpawnerIsland> {
 
     private Map<EntityType, Map<SpawnerUpgrade, Integer>> amounts;
 
-    public SpawnerIsland(Map<EntityType, Map<SpawnerUpgrade, Integer>> amounts) {
-        this.amounts = amounts;
+    public SpawnerIsland(Island island) {
+        this.island = island;
+        amounts = new TreeMap<>();
+    }
+
+    public void increment(EntityType type, String upgrade, int amount) {
+        SpawnerUpgrade spawnerUpgrade = plugin.getUpgradeService().getUpgrade(type, upgrade);
+        amounts.computeIfAbsent(type, k -> new HashMap<>()).compute(spawnerUpgrade, (key, value) -> {
+            if(value == null) {
+                return amount;
+            } else {
+                return value + amount;
+            }
+        });
     }
 
     public BigDecimal getTotalValue() {
@@ -29,6 +40,10 @@ public class SpawnerIsland implements Comparable<SpawnerIsland> {
             }
         }
         return amount;
+    }
+
+    public Island getIsland() {
+        return island;
     }
 
     public BigDecimal getValue(EntityType type, String upgrade) {

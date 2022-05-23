@@ -33,12 +33,6 @@ spawner-item:
 messages:
   SPAWNER-PLACED: "&a&l(!) &aYou have placed &2%amount%x %type% &aspawner."
   SPAWNER-BROKEN: "&a&l(!) &aYou have broken &2%amount%x %type% &aspawner."
-  SPAWNER-INFO:
-    - "&e&l(!) &eSpawner Information:"
-    - " &6&l⋆ &eType: &f%type%"
-    - " &6&l⋆ &eUpgrade: &f%upgrade%"
-    - " &6&l⋆ &eAmount: &f%amount%"
-    - "&f"
 
   ISLAND-TOP-UPDATING:
     - " "

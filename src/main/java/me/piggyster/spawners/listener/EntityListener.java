@@ -37,7 +37,7 @@ public class EntityListener implements Listener {
     }
 
     @EventHandler
-    public void onDeath(EntityDamageByEntityEvent event) {
+    public void onDamage(EntityDamageByEntityEvent event) {
         if(!(event.getEntity() instanceof LivingEntity livingEntity) || event.getEntity() instanceof Player) return;
         if(!(event.getDamager() instanceof Player player)) return;
 
@@ -49,9 +49,6 @@ public class EntityListener implements Listener {
                 StackedEntity stackedEntity = plugin.getDataService().getStackedEntity(livingEntity);
                 AsyncEntityDeathEvent stackedEntityDeathEvent = new AsyncEntityDeathEvent(stackedEntity, player);
                 Bukkit.getPluginManager().callEvent(stackedEntityDeathEvent);
-                if(stackedEntityDeathEvent.isCancelled()) {
-                    return;
-                }
                 if(stackedEntity.decreaseStackAmount(1) == -1) return;
                 int lootBonus = player.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) + stackedEntityDeathEvent.getLootBonus();
                 ItemStack loot = plugin.getLootService().getLootTable(livingEntity).getDrop(stackedEntity, lootBonus);
@@ -60,6 +57,24 @@ public class EntityListener implements Listener {
                     stackedEntity.remove();
                     plugin.getDataService().removeStackedEntity(stackedEntity);
                 }
+            });
+        }
+    }
+
+    @EventHandler
+    public void onDeath(EntityDeathEvent event) {
+        if(event.getEntity() instanceof Player) return;
+        LivingEntity livingEntity = event.getEntity();
+        if(plugin.getDataService().isStackedEntity(livingEntity)) {
+            event.getDrops().clear();
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                StackedEntity stackedEntity = plugin.getDataService().getStackedEntity(livingEntity);
+                AsyncEntityDeathEvent stackedEntityDeathEvent = new AsyncEntityDeathEvent(stackedEntity, null);
+                Bukkit.getPluginManager().callEvent(stackedEntityDeathEvent);
+                int lootBonus = stackedEntityDeathEvent.getLootBonus();
+                ItemStack loot = plugin.getLootService().getLootTable(livingEntity).getDrop(stackedEntity, lootBonus, true);
+                plugin.getLootService().transform(loot, stackedEntity.getLivingEntity().getLocation(), null);
+                plugin.getDataService().removeStackedEntity(stackedEntity);
             });
         }
     }

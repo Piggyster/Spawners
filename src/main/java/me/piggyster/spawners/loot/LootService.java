@@ -3,7 +3,6 @@ package me.piggyster.spawners.loot;
 import me.piggyster.api.service.PluginService;
 import me.piggyster.spawners.SpawnerPlugin;
 import me.piggyster.spawners.loot.impl.DropLootTransformer;
-import me.piggyster.spawners.loot.impl.InventoryLootTransformer;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
@@ -36,7 +35,6 @@ public class LootService implements PluginService<SpawnerPlugin> {
 
         transformers = new ArrayList<>();
         register(new DropLootTransformer());
-        register(new InventoryLootTransformer());
     }
 
     public void sort() {

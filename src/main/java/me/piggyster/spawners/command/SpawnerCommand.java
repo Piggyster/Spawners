@@ -4,7 +4,6 @@ import me.piggyster.api.command.Command;
 import me.piggyster.spawners.SpawnerPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class SpawnerCommand extends Command {
 

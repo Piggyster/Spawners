@@ -1,5 +1,6 @@
 package me.piggyster.spawners.data;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.piggyster.api.config.ConfigManager;
 import me.piggyster.api.menu.item.SimpleItem;
 import me.piggyster.api.service.PluginService;
@@ -7,6 +8,7 @@ import me.piggyster.spawners.SpawnerPlugin;
 import me.piggyster.spawners.stacked.StackedSpawner;
 import me.piggyster.spawners.upgrades.SpawnerUpgrade;
 import org.apache.commons.lang.WordUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.ConfigurationSection;
@@ -65,23 +67,26 @@ public class SettingsService implements PluginService<SpawnerPlugin> {
     }
 
     public ItemStack getSpawner(StackedSpawner stackedSpawner) {
-        return getSpawner(stackedSpawner.getEntityType(), stackedSpawner.getUpgrade());
+        return getSpawner(stackedSpawner.getEntityType(), stackedSpawner.getUpgradeName());
     }
 
-    public ItemStack getSpawner(EntityType type, SpawnerUpgrade upgrade) {
+    public ItemStack getSpawner(EntityType type, String upgrade) {
+        SpawnerUpgrade spawnerUpgrade = plugin.getUpgradeService().getUpgrade(type, upgrade);
         SimpleItem item = spawner.clone();
         item.setPlaceholder("%name%", WordUtils.capitalizeFully(type.toString().replace("_", " ")));
-        item.setPlaceholder("%upgrade%", upgrade.getName() == null ? "None" : upgrade.getName());
-        if(upgrade.getName() != null) {
-            item.addNBT("spawner-upgrade", upgrade.getName());
+        item.setPlaceholder("%upgrade%", spawnerUpgrade.getName() == null ? "None" : spawnerUpgrade.getName());
+        if(spawnerUpgrade.getName() != null) {
+            item.addNBT("spawner-upgrade", spawnerUpgrade.getName());
         }
         ItemStack itemStack = item.build();
         ItemMeta meta = itemStack.getItemMeta();
         BlockStateMeta blockStateMeta = (BlockStateMeta) meta;
         CreatureSpawner creatureSpawner = (CreatureSpawner) blockStateMeta.getBlockState();
         creatureSpawner.setSpawnedType(type);
+        creatureSpawner.setDelay(creatureSpawner.getMinSpawnDelay());
         blockStateMeta.setBlockState(creatureSpawner);
         itemStack.setItemMeta(blockStateMeta);
+        NBTItem nbtItem = new NBTItem(itemStack);
         return itemStack;
     }
 

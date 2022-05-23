@@ -1,23 +1,29 @@
 package me.piggyster.spawners.data;
 
+import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.sun.source.tree.Tree;
 import me.piggyster.spawners.SpawnerPlugin;
 import me.piggyster.spawners.stacked.StackedSpawner;
+import me.piggyster.spawners.top.SpawnerIsland;
 import me.piggyster.spawners.upgrades.SpawnerUpgrade;
 import me.piggyster.spawners.utils.ChunkPosition;
 import me.piggyster.spawners.utils.LocationUtils;
+import me.piggyster.spawners.utils.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
+import org.hamcrest.core.Is;
 
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class SpawnerDatabase {
 
@@ -34,6 +40,32 @@ public class SpawnerDatabase {
             ex.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(plugin);
         }
+    }
+
+    public CompletableFuture<Map<UUID, SpawnerIsland>> loadIslandTop() {
+        CompletableFuture<Map<UUID, SpawnerIsland>> future = new CompletableFuture<>();
+        executorService.submit(() -> {
+            try {
+                PreparedStatement ps = connection.prepareStatement("SELECT * FROM spawners;");
+                ResultSet set = ps.executeQuery();
+                Map<UUID, SpawnerIsland> map = new HashMap<>();
+                while(set.next()) {
+                    World world = Bukkit.getWorld(set.getString("world"));
+                    if(world == null) continue;
+                    Location location = LocationUtils.locationFromString(set.getString("location"), world);
+                    Island island = SuperiorSkyblockAPI.getIslandAt(location);
+                    if(island == null) continue;
+                    EntityType type = EntityType.valueOf(set.getString("type"));
+                    String upgrade = set.getString("upgrade");
+                    int amount = set.getInt("amount");
+                    map.computeIfAbsent(island.getUniqueId(), k -> new SpawnerIsland(island)).increment(type, upgrade, amount);
+                }
+                future.complete(map);
+            } catch(SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
+        return future;
     }
 
     public CompletableFuture<Map<EntityType, Map<SpawnerUpgrade, Integer>>> loadSpawnersInIsland(Island island) {

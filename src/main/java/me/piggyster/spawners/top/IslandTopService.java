@@ -8,16 +8,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class IslandTopService implements PluginService<SpawnerPlugin> {
 
     private static final SpawnerPlugin plugin = SpawnerPlugin.getInstance();
 
-    private TreeMap<SpawnerIsland, Island> topIslands;
+    private List<SpawnerIsland> topIslands;
     private Map<EntityType, String> skullURLs;
 
     public void initialize() {
@@ -39,26 +38,28 @@ public class IslandTopService implements PluginService<SpawnerPlugin> {
             update().thenAccept((ms) -> {
                 Bukkit.getOnlinePlayers().forEach(player -> plugin.getConfigManager().getMessage("ISLAND-TOP-UPDATED").send(player));
             });
-        }, 400, 12000);
+        }, 50, 12000);
     }
 
     public CompletableFuture<Long> update() {
+        topIslands = null;
         CompletableFuture<Long> future = new CompletableFuture<>();
         long ms = System.currentTimeMillis();
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            topIslands = new TreeMap<>();
-            for(Island island : SuperiorSkyblockAPI.getGrid().getIslands()) {
-                plugin.getDataService().loadSpawnersInIsland(island).thenAccept(map -> {
-                    SpawnerIsland spawnerIsland = new SpawnerIsland(map);
-                    topIslands.put(spawnerIsland, island);
+            topIslands = new ArrayList<>();
+            plugin.getDataService().loadIslandTop().thenAccept(map -> {
+                map.forEach((uuid, spawnerIsland) -> {
+                    topIslands.add(spawnerIsland);
                 });
-            }
+                Collections.sort(topIslands);
+                topIslands = topIslands.stream().limit(10).collect(Collectors.toList());
+            });
             future.complete(System.currentTimeMillis() - ms);
         });
         return future;
     }
 
-    public TreeMap<SpawnerIsland, Island> getTopIslands() {
+    public List<SpawnerIsland> getTopIslands() {
         return topIslands;
     }
 

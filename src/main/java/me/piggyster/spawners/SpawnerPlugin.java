@@ -22,6 +22,8 @@ import org.bukkit.World;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+
 public class SpawnerPlugin extends JavaPlugin {
 
 
@@ -39,6 +41,8 @@ public class SpawnerPlugin extends JavaPlugin {
 
     public void onEnable() {
         instance = this;
+
+        configManager = new ConfigManager(this, new File(getDataFolder(), "mobs"));
 
         configManager = new ConfigManager(this);
         configManager.createConfig("config");
