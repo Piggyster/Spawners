@@ -8,6 +8,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.ItemMergeEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -26,25 +27,27 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onPickup(PlayerPickupItemEvent e) {
-        Item item = e.getItem();
-        if (itemService.isStacked(item)) {
-            e.setCancelled(true);
+    public void onPickup(EntityPickupItemEvent e) {
+        if(e.getEntity() instanceof Player player) {
+            Item item = e.getItem();
+            if (itemService.isStacked(item)) {
+                e.setCancelled(true);
 
-            long stackSize = itemService.getStackSize(item);
+                long stackSize = itemService.getStackSize(item);
 
-            int playerInv = itemHandler.computeSpace(e.getPlayer().getInventory(), item.getItemStack());
-            int stacksToGive = (int) Math.min(stackSize, playerInv); // Can safely cast this
-            long leftOver = stackSize - stacksToGive;
+                int playerInv = itemHandler.computeSpace(player.getInventory(), item.getItemStack());
+                int stacksToGive = (int) Math.min(stackSize, playerInv); // Can safely cast this
+                long leftOver = stackSize - stacksToGive;
 
-            item.getItemStack().setAmount(1);
-            itemHandler.addToInventory(e.getPlayer().getInventory(), e.getItem().getItemStack(), stacksToGive);
+                item.getItemStack().setAmount(1);
+                itemHandler.addToInventory(player.getInventory(), e.getItem().getItemStack(), stacksToGive);
 
-            if (leftOver <= 0) {// If this is less than 0, there's a dupe somewhere
-                itemService.removeStack(e.getItem());
-                e.getItem().remove();
-            } else
-                itemService.setStackSize(e.getItem(), leftOver);
+                if (leftOver <= 0) {// If this is less than 0, there's a dupe somewhere
+                    itemService.removeStack(e.getItem());
+                    e.getItem().remove();
+                } else
+                    itemService.setStackSize(e.getItem(), leftOver);
+            }
         }
     }
 

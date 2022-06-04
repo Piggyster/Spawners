@@ -31,10 +31,6 @@ public class SpawnerUpgrade {
         return name;
     }
 
-    public SpawnerUpgrade getNextUpgrade() {
-        return null;
-    }
-
     public BigDecimal getPrice() {
         return price;
     }

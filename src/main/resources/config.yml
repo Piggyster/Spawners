@@ -33,6 +33,8 @@ spawner-item:
 messages:
   SPAWNER-PLACED: "&a&l(!) &aYou have placed &2%amount%x %type% &aspawner."
   SPAWNER-BROKEN: "&a&l(!) &aYou have broken &2%amount%x %type% &aspawner."
+  SPAWNER-GIVEN: "&a&l(!) &aYou gave &2%player% %amount%x %type% &aspawner."
+  SPAWNER-RECEIVED: "&a&l(!) &aYou received &2%amount%x %type% &aspawner."
 
   ISLAND-TOP-UPDATING:
     - " "
@@ -44,7 +46,9 @@ messages:
     - " &3&m--&r &b&lISLAND TOP UPDATED &3&m--&r"
     - " &7&o(( View results with &f&o/is top&7&o, next update in 10m! ))"
     - " "
-
+  ERROR-ISLAND-TOP-UPDATING: "&c&l(!) &cIsland top is currently being updated!"
+  STARTED-ISLAND-TOP-UPDATE: "&a&l(!) &aYou have started re-calculating island values."
+  FINISHED-ISLAND-TOP-UPDATE: "&a&l(!) &aYou have finished re-calculating island values. &7(%ms%ms)"
 
   INVALID-PLAYER: "&c&l(!) &cInvalid player &4%found%&c."
   INVALID-NUMBER: "&c&l(!) &cInvalid number &4%found%&c."

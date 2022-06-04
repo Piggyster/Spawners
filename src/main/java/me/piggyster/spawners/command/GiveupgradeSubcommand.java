@@ -4,6 +4,7 @@ import me.piggyster.api.command.SubCommand;
 import me.piggyster.api.config.ConfigManager;
 import me.piggyster.spawners.SpawnerPlugin;
 import me.piggyster.spawners.upgrades.SpawnerUpgrade;
+import me.piggyster.spawners.utils.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
@@ -47,5 +48,14 @@ public class GiveupgradeSubcommand extends SubCommand {
         ItemStack spawner = plugin.getSettingsService().getSpawner(type, upgrade.getName());
         spawner.setAmount(amount);
         target.getInventory().addItem(spawner);
+        plugin.getConfigManager().getMessage("SPAWNER-GIVEN")
+                .setPlaceholder("%player%", target.getName())
+                .setPlaceholder("%amount%", amount)
+                .setPlaceholder("%type%", upgrade.getName() + " " + StringUtils.entityToString(type))
+                .send(sender);
+        plugin.getConfigManager().getMessage("SPAWNER-RECEIVED")
+                .setPlaceholder("%amount%", amount)
+                .setPlaceholder("%type%", upgrade.getName() + " " + StringUtils.entityToString(type))
+                .send(target);
     }
 }

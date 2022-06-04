@@ -33,10 +33,9 @@ public class LootTable {
         }
     }
 
-    public ItemStack getDrop(StackedEntity stackedEntity, int lootBonus, boolean all) {
+    public ItemStack getDrop(StackedEntity stackedEntity, int lootBonus, int stackAmount) {
         ItemStack loot = getDrop(stackedEntity, lootBonus);
-        if(!all) return loot;
-        loot.setAmount(loot.getAmount() * stackedEntity.getStackAmount());
+        loot.setAmount(loot.getAmount() * stackAmount);
         return loot;
     }
 

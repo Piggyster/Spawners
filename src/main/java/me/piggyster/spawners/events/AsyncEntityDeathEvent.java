@@ -15,11 +15,14 @@ public class AsyncEntityDeathEvent extends Event {
     private int lootBonus;
     private Player player;
 
-    public AsyncEntityDeathEvent(StackedEntity stackedEntity, Player player) {
+    private int killAmount;
+
+    public AsyncEntityDeathEvent(StackedEntity stackedEntity, Player player, int killAmount) {
         super(true);
         this.stackedEntity = stackedEntity;
         this.player = player;
         this.lootBonus = 0;
+        this.killAmount = killAmount;
     }
 
     public void setLootBonus(int lootBonus) {
@@ -40,6 +43,14 @@ public class AsyncEntityDeathEvent extends Event {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public int getKillAmount() {
+        return killAmount;
+    }
+
+    public void setKillAmount(int killAmount) {
+        this.killAmount = killAmount;
     }
 
     public HandlerList getHandlers() {

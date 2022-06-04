@@ -25,10 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 
 public class SpawnerPlugin extends JavaPlugin {
-
-
     private static SpawnerPlugin instance;
-
     private ConfigManager configManager;
     private DataService dataService;
     private UpgradeService upgradeService;

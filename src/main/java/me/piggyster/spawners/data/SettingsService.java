@@ -33,9 +33,9 @@ public class SettingsService implements PluginService<SpawnerPlugin> {
 
     private String entityName;
     private String entityNameUpgraded;
-    private String spawnerHologram;
-    private String spawnerHologramUpgraded;
     private String itemName;
+
+    private int hitCooldown;
 
     public SettingsService(SpawnerPlugin plugin) {
         this.plugin = plugin;
@@ -57,9 +57,8 @@ public class SettingsService implements PluginService<SpawnerPlugin> {
         chunkSpawners = settingsSection.getBoolean("limit-spawners-per-chunk", false);
         entityName = settingsSection.getString("entity-name", "&6&l%amount%x &e&l%mob%");
         entityNameUpgraded = settingsSection.getString("entity-name-upgraded", "&6&l%amount%x &e&l%mob% &7(%upgrade%)");
-        spawnerHologram = settingsSection.getString("spawner-hologram", "&6&l%amount%x &e&l%mob%");
-        spawnerHologramUpgraded = settingsSection.getString("spawner-hologram-upgraded", "&6&l%amount%x &e&l%mob% &7(%upgrade%)");
         itemName = settingsSection.getString("item-name", "&6%amount%x &e%item%");
+        hitCooldown = settingsSection.getInt("hit-cooldown", 100);
     }
 
     public SimpleItem getUpgradeDrop() {
@@ -86,7 +85,6 @@ public class SettingsService implements PluginService<SpawnerPlugin> {
         creatureSpawner.setDelay(creatureSpawner.getMinSpawnDelay());
         blockStateMeta.setBlockState(creatureSpawner);
         itemStack.setItemMeta(blockStateMeta);
-        NBTItem nbtItem = new NBTItem(itemStack);
         return itemStack;
     }
 
@@ -117,17 +115,12 @@ public class SettingsService implements PluginService<SpawnerPlugin> {
     public String getEntityNameUpgraded() {
         return entityNameUpgraded;
     }
-
-    public String getSpawnerHologram() {
-        return spawnerHologram;
-    }
-
-    public String getSpawnerHologramUpgraded() {
-        return spawnerHologramUpgraded;
-    }
-
     public String getItemName() {
         return itemName;
+    }
+
+    public int getHitCooldown() {
+        return hitCooldown;
     }
 
 

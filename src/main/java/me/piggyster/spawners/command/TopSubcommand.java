@@ -30,13 +30,17 @@ public class TopSubcommand extends SubCommand {
     public void run(CommandSender sender, String[] args) {
         IslandTopService service = plugin.getIslandTopService();
         if(args.length == 1 && args[0].equalsIgnoreCase("update")) {
-            sender.sendMessage("updating");
-            service.update().thenAccept(ms -> sender.sendMessage("updated in " + ms + "ms"));
+            plugin.getConfigManager().getMessage("STARTED-ISLAND-TOP-UPDATE").send(sender);
+            service.update().thenAccept(ms -> plugin.getConfigManager().getMessage("FINISHED-ISLAND-TOP-UPDATE").setPlaceholder("%ms%", ms));
             return;
         }
 
         if(!(sender instanceof Player player)) return;
 
+        if(service.isLoaded()) {
+            plugin.getConfigManager().getMessage("ERROR-ISLAND-TOP-UPDATING").send(player);
+            return;
+        }
         TopMenu topMenu = new TopMenu(player);
         topMenu.open();
     }
